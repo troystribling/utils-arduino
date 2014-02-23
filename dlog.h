@@ -4,7 +4,7 @@
 #ifdef DEBUG
   #define DLOG(...) Serial.println(__VA_ARGS__)
 #else
-  #define DLOG(...)
+  #define DLOG(...) {}
 #endif
 
 #endif
