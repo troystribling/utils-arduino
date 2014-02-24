@@ -2,7 +2,7 @@
 #define _UTILS_H_
 
 #include "byte_swap.h"
-#include "dlog.h"
+#include "log.h"
 #include "memory_free.h"
 
 #endif
