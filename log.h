@@ -1,10 +1,10 @@
 #ifndef LOG_H
 #define LOG_H
 
-#ifdef DEBUG
-  #define DLOG(...) Serial.print(F("DEBUG: ")); Serial.println(__VA_ARGS__)
+#ifdef DBUG
+  #define DBUG(...) Serial.print(F("DBUG: ")); Serial.println(__VA_ARGS__)
 #else
-  #define DLOG(...) {}
+  #define DBUG(...) {}
 #endif
 
 #ifdef INFO
