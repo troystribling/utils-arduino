@@ -15,8 +15,13 @@
 
 #ifdef ERROR
   #define ERROR(...) Serial.print(F("ERROR: ")); Serial.println(__VA_ARGS__)
+  #define HALT_ON_ERROR(X, Y) if (!X) {     \
+    ERROR(Y);                               \
+    while(1);                               \
+  }                                         \
 #else
   #define ERROR(...) {}
+  #define HALT_ON_ERROR(X, Y) X
 #endif
 
 #endif
