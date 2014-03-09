@@ -2,26 +2,28 @@
 #define LOG_H
 
 #ifdef DBUG
-  #define DBUG(...) Serial.print(F("DBUG: ")); Serial.println(__VA_ARGS__)
+  #define DBUG_LOG(...) Serial.print(F("DBUG: ")); Serial.println(__VA_ARGS__)
 #else
-  #define DBUG(...) {}
+  #define DBUG_LOG(...)
 #endif
 
 #ifdef INFO
-  #define INFO(...) Serial.print(F("INFO: ")); Serial.println(__VA_ARGS__)
+  #define INFO_LOG(...) Serial.print(F("INFO: ")); Serial.println(__VA_ARGS__)
 #else
-  #define INFO(...) {}
+  #define INFO_LOG(...)
 #endif
 
 #ifdef ERROR
-  #define ERROR(...) Serial.print(F("ERROR: ")); Serial.println(__VA_ARGS__)
-  #define HALT_ON_ERROR(X, Y) if (!X) {     \
-    ERROR(Y);                               \
-    while(1);                               \
-  }                                         \
+  #define ERROR_LOG(...) Serial.print(F("ERROR: ")); Serial.println(__VA_ARGS__)
+  #define HALT_ON_ERROR(X, Y) do {    \
+    if (!X) {                         \
+      ERROR_LOG(Y);                   \
+      while(1);                       \
+    }                                 \
+  } while(0)
 #else
-  #define ERROR(...) {}
-  #define HALT_ON_ERROR(X, Y) X
+  #define ERROR_LOG(...)
+  #define HALT_ON_ERROR(X, Y) X;
 #endif
 
 #endif
