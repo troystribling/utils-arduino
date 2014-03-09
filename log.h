@@ -27,7 +27,7 @@
   } while(0)
 #else
   #define ERROR_LOG(...)
-  #define HALT_ON_ERROR(X, Y) X;
+  #define HALT_ON_ERROR(X, Y) X
 #endif
 
 #endif
