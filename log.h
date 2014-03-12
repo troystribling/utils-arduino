@@ -5,6 +5,7 @@
 
 #ifdef DBUG
   #define DBUG_LOG(...) Serial.print(F("DBUG: ")); Serial.println(__VA_ARGS__)
+  #define DBUG_OUT(...) Serial.print(__VA_ARGS__)
   #define DBUG_FREE_MEMORY Serial.print(F("DBUG: Free Memory: "));Serial.print(freeMemory());Serial.println(F(" bytes"))
 #else
   #define DBUG_LOG(...)
