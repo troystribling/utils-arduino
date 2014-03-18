@@ -8,6 +8,7 @@ public:
     uint16_t update(uint16_t index, const T& value);
     uint16_t read(uint16_t index, T& value);
     uint16_t remove(uint16_t index, const T& value);
+    uint8_t count();
 private:
     uint16_t location(int16_t index, uint16_t size){return (offset + index * size);};
     uint8_t nextLocation(uint16_t size);
@@ -51,6 +52,17 @@ template <class T> uint16_t EEPROMObject<T>::read(uint16_t index, T& value) {
 template <class T> uint16_t EEPROMObject<T>::remove(uint16_t index, const T& value) {
     uint16_t loc = location(index, sizeof(value));
     EEPROM.write(loc, 0x0);
+}
+
+template <class T> uint8_t EEPROMObject<T>::count() {
+    uint8_t cnt = 0;
+    for (int i = 0; i < maxObjects; i++) {
+        uint8_t loc = location(i, sizeof(T));
+        if (EEPROM.read(loc) != 0x0) {
+            cnt++;
+        }
+    }
+    return cnt;
 }
 
 template <class T> uint8_t EEPROMObject<T>::nextLocation(uint16_t size) {
