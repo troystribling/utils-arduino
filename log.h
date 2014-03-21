@@ -8,6 +8,7 @@
   #define DBUG_OUT(...) Serial.print(__VA_ARGS__)
   #define DBUG_FREE_MEMORY Serial.print(F("DBUG: Free Memory: "));Serial.print(freeMemory());Serial.println(F(" bytes"))
 #else
+  #define DBUG_OUT(...)
   #define DBUG_LOG(...)
   #define DBUG_FREE_MEMORY
 #endif
