@@ -22,13 +22,7 @@ private:
 template <class T> uint16_t EEPROMObject<T>::create(uint8_t& index, const T& value) {
     const byte* v = (const byte*)(const void*)&value;
     uint16_t loc = nextFreeLocation(sizeof(value)), i;
-    DBUG_LOG(index);
     index = (loc - offset) / sizeof(value);
-    DBUG_LOG(F("EEPROMObject::create:"));
-    DBUG_LOG(loc);
-    DBUG_LOG(index);
-    DBUG_LOG(offset);
-    DBUG_LOG(sizeof(value));
     for (i = 0; i < sizeof(value); i++) {
         EEPROM.write(loc, *v);
         loc++;
@@ -84,14 +78,13 @@ template <class T> uint8_t EEPROMObject<T>::count() {
 // private
 template <class T> uint16_t EEPROMObject<T>::nextFreeLocation(uint16_t size) {
     uint16_t loc = offset;
-    uint8_t i;
-    for (i = 0; i < maxObjects; i++) {
+    for (uint8_t i = 0; i < maxObjects; i++) {
         if (EEPROM.read(loc) == 0x0) {
             break;
         }
         loc += size;
     }
-    return i;
+    return loc;
 }
 
 template <class T> uint8_t EEPROMObject<T>::nextUsedIndex(uint8_t currentIndex, uint16_t size) {
