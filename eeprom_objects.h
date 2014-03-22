@@ -22,11 +22,15 @@ private:
 template <class T> uint16_t EEPROMObject<T>::create(uint8_t& index, const T& value) {
     const byte* v = (const byte*)(const void*)&value;
     uint16_t loc = nextFreeLocation(sizeof(value)), i;
-    index = (loc - offset) / sizeof(value);
-    for (i = 0; i < sizeof(value); i++) {
-        EEPROM.write(loc, *v);
-        loc++;
-        v++;
+    if (loc != 0xffff) {
+        index = (loc - offset) / sizeof(value);
+        for (i = 0; i < sizeof(value); i++) {
+            EEPROM.write(loc, *v);
+            loc++;
+            v++;
+        }
+    } else {
+        i = 0xffff;
     }
     return i;
 }
@@ -65,7 +69,7 @@ template <class T> uint16_t EEPROMObject<T>::remove(uint8_t index) {
 
 template <class T> uint8_t EEPROMObject<T>::count() {
     uint8_t cnt = 0;
-    uint8_t loc = location(0, sizeof(T));
+    uint16_t loc = location(0, sizeof(T));
     for (uint8_t i = 0; i < maxObjects; i++) {
         if (EEPROM.read(loc) != 0x0) {
             cnt++;
@@ -81,6 +85,9 @@ template <class T> uint16_t EEPROMObject<T>::nextFreeLocation(uint16_t size) {
     for (uint8_t i = 0; i < maxObjects; i++) {
         if (EEPROM.read(loc) == 0x0) {
             break;
+        } else if (i == maxObjects - 1) {
+            loc = 0xffff;
+            break;
         }
         loc += size;
     }
@@ -88,13 +95,28 @@ template <class T> uint16_t EEPROMObject<T>::nextFreeLocation(uint16_t size) {
 }
 
 template <class T> uint8_t EEPROMObject<T>::nextUsedIndex(uint8_t currentIndex, uint16_t size) {
-    uint16_t loc = location(currentIndex, size);
+    uint16_t loc = location(currentIndex + 1, size);
     uint8_t i;
-    for (i = currentIndex; i < maxObjects; i++) {
+    for (i = currentIndex + 1; i < maxObjects; i++) {
         if (EEPROM.read(loc) != 0x0) {
+            break;
+        } else if (i == maxObjects - 1) {
+            i = 0xff;
             break;
         }
         loc += size;
+    }
+    if (i == 0xff) {
+        loc = location(0, size);
+        for (i = 0; i < currentIndex; i++) {
+            if (EEPROM.read(loc) != 0x0) {
+                break;
+            } else if (i == currentIndex - 1) {
+                i = currentIndex;
+                break;
+            }
+            loc += size;
+        }
     }
     return i;
 }
